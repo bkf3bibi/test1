@@ -1,9 +1,10 @@
 {
-  "update_time": "2026-01-13 10:15:01",
+  "update_time": "2026-01-13 10:28:39 (數據更新失敗，顯示舊資料)",
   "stock_news": [
     {
       "title": "Yahoo奇摩股市",
       "status": "自動掃描完成"
     }
-  ]
+  ],
+  "error_message": "No stock data available from TWSE."
 }

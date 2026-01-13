@@ -2,270 +2,111 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台股漲跌幅掃描</title>
+    <title>AI 財經科技終端</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --bg-color: #0d1117;
-            --text-color: #c9d1d9;
-            --primary-color: #58a6ff;
-            --success-color: #2ea44f;
-            --danger-color: #f85149;
-            --border-color: #30363d;
-            --card-bg: #161b22;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 162, 255, 0.2);
-            padding: 30px;
-            width: 100%;
-            max-width: 900px;
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 25px;
-            text-shadow: 0 0 8px rgba(88, 166, 255, 0.5);
-        }
-        .update-time {
-            text-align: center;
-            font-size: 0.9em;
-            color: #8b949e;
-            margin-bottom: 25px;
-        }
-        .stock-section {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .stock-list {
-            flex: 1;
-            min-width: 350px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-        }
-        .stock-list h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-        .stock-list ul {
-            list-style: none;
-            padding: 0;
-        }
-        .stock-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px dashed var(--border-color);
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-        }
-        .stock-item:hover {
-            background-color: rgba(var(--primary-color), 0.1);
-            transform: translateX(5px);
-        }
-        .stock-item:last-child {
-            border-bottom: none;
-        }
-        .stock-name {
-            font-weight: bold;
-            flex-grow: 1;
-        }
-        .stock-code {
-            font-size: 0.8em;
-            color: #8b949e;
-            margin-left: 10px;
-        }
-        .stock-change {
-            font-weight: bold;
-            min-width: 80px;
-            text-align: right;
-        }
-        .gain { color: var(--success-color); }
-        .lose { color: var(--danger-color); }
-
-        .popup {
-            display: none;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 162, 255, 0.4);
-            padding: 30px;
-            z-index: 1000;
-            max-width: 400px;
-            width: 90%;
-            animation: fadeIn 0.3s ease-out;
-        }
-        .popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-        .popup-header h3 {
-            margin: 0;
-            color: var(--primary-color);
-        }
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            color: #8b949e;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .close-btn:hover {
-            color: var(--text-color);
-        }
-        .popup-body p {
-            margin-bottom: 10px;
-        }
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 999;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -60%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
-        }
-        @media (max-width: 768px) {
-            .stock-section {
-                flex-direction: column;
-                align-items: center;
-            }
-            .stock-list {
-                width: 100%;
-                min-width: unset;
-            }
-        }
+        :root { --bg: #050a14; --panel: #0f172a; --cyan: #22d3ee; --rose: #f43f5e; --emerald: #10b981; }
+        body { background: var(--bg); color: #e2e8f0; font-family: 'Segoe UI', system-ui; margin: 0; padding: 20px; }
+        .terminal { max-width: 1100px; margin: 0 auto; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(34,211,238,0.1); }
+        .header { display: flex; justify-content: space-between; border-bottom: 2px solid #1e293b; padding-bottom: 15px; margin-bottom: 20px; }
+        .tag { background: #1e293b; padding: 4px 12px; border-radius: 20px; font-size: 12px; border: 1px solid var(--cyan); }
+        .chart-container { background: var(--panel); padding: 20px; border-radius: 12px; margin-bottom: 25px; height: 300px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .list-box { background: var(--panel); border-radius: 12px; padding: 15px; border: 1px solid #1e293b; }
+        .item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #1e293b; cursor: pointer; transition: 0.2s; }
+        .item:hover { background: #1e293b; }
+        .price-up { color: var(--rose); font-weight: bold; }
+        .price-down { color: var(--emerald); font-weight: bold; }
+        #overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); z-index:99; }
+        #modal { display: none; position: fixed; top:50%; left:50%; transform: translate(-50%,-50%); background: var(--panel); padding: 30px; border: 1px solid var(--cyan); border-radius: 16px; z-index:100; min-width: 300px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📊 台股漲跌幅掃描</h1>
-        <p class="update-time">最後更新：<span id="update-time">載入中...</span></p>
-        <div class="stock-section" id="stock-sections">
-            載入數據中...
+    <div class="terminal">
+        <div class="header">
+            <h2 style="margin:0; color:var(--cyan)">TWSE MARKET ANALYZER v2.0</h2>
+            <div id="status-tag" class="tag">掃描中...</div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="marketChart"></canvas>
+        </div>
+
+        <div class="grid">
+            <div class="list-box">
+                <h3 style="color:var(--rose)">▲ TOP 10 GAINERS</h3>
+                <div id="gainers"></div>
+            </div>
+            <div class="list-box">
+                <h3 style="color:var(--emerald)">▼ TOP 10 LOSERS</h3>
+                <div id="losers"></div>
+            </div>
         </div>
     </div>
 
-    <div class="overlay" id="overlay"></div>
-    <div class="popup" id="stock-popup">
-        <div class="popup-header">
-            <h3 id="popup-title"></h3>
-            <button class="close-btn" id="close-popup">&times;</button>
-        </div>
-        <div class="popup-body">
-            <p>代號：<span id="popup-code"></span></p>
-            <p>收盤價：<span id="popup-close-price"></span></p>
-            <p>漲跌值：<span id="popup-change-value"></span></p>
-            <p>漲跌幅：<span id="popup-change-percent"></span></p>
-            </div>
+    <div id="overlay" onclick="closeModal()"></div>
+    <div id="modal">
+        <h2 id="m-title" style="color:var(--cyan)"></h2>
+        <div id="m-body" style="line-height: 2;"></div>
+        <button onclick="closeModal()" style="margin-top:20px; width:100%; padding:10px; background:var(--cyan); border:none; border-radius:8px; font-weight:bold; cursor:pointer">CLOSE</button>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const updateTimeSpan = document.getElementById('update-time');
-            const stockSectionsDiv = document.getElementById('stock-sections');
-            const stockPopup = document.getElementById('stock-popup');
-            const overlay = document.getElementById('overlay');
-            const closePopupBtn = document.getElementById('close-popup');
+        let myChart;
+        fetch('./data.json?t=' + Date.now()).then(res => res.json()).then(data => {
+            const statusTag = document.getElementById('status-tag');
+            statusTag.innerText = data.is_closed ? `● 盤後更新: ${data.update_time}` : `○ 盤中觀測: ${data.update_time}`;
+            
+            renderUI(data.gainers, 'gainers', 'price-up');
+            renderUI(data.losers, 'losers', 'price-down');
+            initChart(data.gainers, data.losers);
+        });
 
-            fetch('./data.json?t=' + new Date().getTime()) // 防止瀏覽器快取
-                .then(response => response.json())
-                .then(data => {
-                    updateTimeSpan.textContent = data.update_time;
+        function renderUI(list, containerId, priceClass) {
+            const box = document.getElementById(containerId);
+            box.innerHTML = list.map(s => `
+                <div class="item" onclick="showDetail('${s.證券名稱}', '${s.證券代號}', ${s.開盤價}, ${s.收盤價}, ${s.漲跌幅})">
+                    <span>${s.證券代號} ${s.證券名稱}</span>
+                    <span class="${priceClass}">${s.漲跌幅}%</span>
+                </div>
+            `).join('');
+        }
 
-                    // 檢查是否有錯誤訊息
-                    if (data.error_message) {
-                        stockSectionsDiv.innerHTML = `<p style="color: var(--danger-color); text-align: center;">數據載入失敗：${data.error_message}<br>正在顯示上次成功更新的數據，請稍後重試。</p>`;
-                    } else {
-                        renderStockList('上漲前十名', data.top_gainers, 'gain');
-                        renderStockList('下跌前十名', data.top_losers, 'lose');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching stock data:', error);
-                    updateTimeSpan.textContent = '數據載入失敗';
-                    stockSectionsDiv.innerHTML = `<p style="color: var(--danger-color); text-align: center;">無法載入股票數據。請檢查網路或稍後再試。</p>`;
-                });
+        function initChart(gainers, losers) {
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            const labels = [...gainers.map(s => s.證券名稱), ...losers.map(s => s.證券名稱)];
+            const values = [...gainers.map(s => s.漲跌幅), ...losers.map(s => s.漲跌幅)];
+            const colors = [...Array(10).fill('#f43f5e'), ...Array(10).fill('#10b981')];
 
-            function renderStockList(title, stocks, type) {
-                const listHtml = `
-                    <div class="stock-list">
-                        <h2 style="color: ${type === 'gain' ? 'var(--success-color)' : 'var(--danger-color)'}">${title}</h2>
-                        <ul>
-                            ${stocks.map(stock => `
-                                <li class="stock-item" data-code="${stock.code}" data-name="${stock.name}"
-                                    data-close-price="${stock.close_price}" data-change-value="${stock.change_value}"
-                                    data-change-percent="${stock.change_percent}">
-                                    <span class="stock-name">${stock.name}</span>
-                                    <span class="stock-code">${stock.code}</span>
-                                    <span class="stock-change ${type}">${stock.change_percent}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                `;
-                stockSectionsDiv.insertAdjacentHTML('beforeend', listHtml);
-            }
-
-            // 處理點擊事件
-            stockSectionsDiv.addEventListener('click', (event) => {
-                const item = event.target.closest('.stock-item');
-                if (item) {
-                    document.getElementById('popup-title').textContent = item.dataset.name;
-                    document.getElementById('popup-code').textContent = item.dataset.code;
-                    document.getElementById('popup-close-price').textContent = item.dataset.closePrice;
-                    document.getElementById('popup-change-value').textContent = item.dataset.changeValue;
-                    document.getElementById('popup-change-percent').textContent = item.dataset.changePercent;
-                    
-                    stockPopup.style.display = 'block';
-                    overlay.style.display = 'block';
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: '漲跌幅 (%)', data: values, backgroundColor: colors }]
+                },
+                options: {
+                    responsive: True, maintainAspectRatio: false,
+                    scales: { y: { grid: { color: '#1e293b' } }, x: { grid: { display: false } } },
+                    plugins: { legend: { display: false } }
                 }
             });
+        }
 
-            // 關閉彈出視窗
-            closePopupBtn.addEventListener('click', () => {
-                stockPopup.style.display = 'none';
-                overlay.style.display = 'none';
-            });
-            overlay.addEventListener('click', () => { // 點擊背景關閉
-                stockPopup.style.display = 'none';
-                overlay.style.display = 'none';
-            });
-        });
+        function showDetail(name, code, open, close, change) {
+            document.getElementById('m-title').innerText = `${name} (${code})`;
+            document.getElementById('m-body').innerHTML = `
+                <div>開盤價: <b style="color:#fff">${open}</b></div>
+                <div>收盤價: <b style="color:#fff">${close}</b></div>
+                <div>漲跌幅: <b style="${change > 0 ? 'color:var(--rose)' : 'color:var(--emerald)'}">${change}%</b></div>
+            `;
+            document.getElementById('modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
     </script>
 </body>
 </html>

@@ -16,4 +16,5 @@ jobs:
           git config --global user.email "bot@github.com"
           git add data.json
           git commit -m "Update data" || exit 0
-          git push
+          git pull --rebase origin main  # 先把雲端變動抓下來合併
+          git push origin main

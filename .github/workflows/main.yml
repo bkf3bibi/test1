@@ -1,5 +1,37 @@
+name: CSV to Web Data AutoUpdate
+
 on:
   push:
     paths:
-      - 'input.csv'  # 當 input.csv 被修改時，自動執行
-  workflow_dispatch: # 保留手動按鈕
+      - 'input.csv'     # 當你修改 input.csv 時觸發
+      - 'scraper.py'    # 當你修改爬蟲程式時觸發
+  workflow_dispatch:    # 允許你在 Actions 頁面手動點擊按鈕執行
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 檢出代碼
+        uses: actions/checkout@v3
+
+      - name: 設定 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 安裝必要套件
+        run: pip install pandas pytz
+
+      - name: 執行資料轉換
+        run: python scraper.py
+
+      - name: 自動提交並推送 data.json
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add data.json
+          git commit -m "Update data from input.csv" || exit 0
+          git push origin main --force

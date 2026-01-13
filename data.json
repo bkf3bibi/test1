@@ -1,13 +1,9 @@
 {
-  "update_time": "2026-01-13 10:09:19",
+  "update_time": "2026-01-13 10:15:01",
   "stock_news": [
     {
-      "title": "台積電盤後分析",
-      "status": "今日表現平穩"
-    },
-    {
-      "title": "大盤趨勢",
-      "status": "機器人自動更新成功"
+      "title": "Yahoo奇摩股市",
+      "status": "自動掃描完成"
     }
   ]
 }

@@ -1,4 +1,13 @@
 {
-  "update_time": "尚未更新",
-  "stock_news": [{"title": "系統啟動中", "status": "請等待機器人執行"}]
+  "update_time": "2026-01-13 10:09:19",
+  "stock_news": [
+    {
+      "title": "台積電盤後分析",
+      "status": "今日表現平穩"
+    },
+    {
+      "title": "大盤趨勢",
+      "status": "機器人自動更新成功"
+    }
+  ]
 }

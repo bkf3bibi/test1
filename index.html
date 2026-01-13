@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8"><title>台股掃描儀</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; background: #f4f4f9; padding: 20px; }
+        .card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 5px solid #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .time { color: #666; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <h1>📈 每日台股掃描</h1>
+    <p class="time">最後更新：<span id="ut">載入中...</span></p>
+    <div id="news"></div>
+    <script>
+        fetch('./data.json?t=' + Date.now())
+            .then(res => res.json()).then(data => {
+                document.getElementById('ut').innerText = data.update_time;
+                document.getElementById('news').innerHTML = data.stock_news.map(n => 
+                    `<div class="card"><h3>${n.title}</h3><p>${n.status}</p></div>`).join('');
+            });
+    </script>
+</body>
+</html>

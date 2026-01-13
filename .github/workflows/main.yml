@@ -1,20 +1,37 @@
 name: AutoUpdate
 on:
-  schedule: [{cron: '0 8 * * *'}] # 每天下午 4 點執行
+  schedule:
+    - cron: '0 8 * * *' # 每天下午 4 點執行 (UTC 08:00)
   workflow_dispatch: # 允許手動執行
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # 確保機器人有權限寫入檔案到儲存庫
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with: {python-version: '3.10'}
-      - run: pip install pytz requests pandas
-      - run: python scraper.py
-      - run: |
-          git config --global user.name "Bot"
-          git config --global user.email "bot@github.com"
+        with:
+          fetch-depth: 0 # 抓取完整歷史紀錄以利於強制更新
+
+      - name: 設定 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 安裝必要套件
+        run: pip install pytz requests pandas
+
+      - name: 執行爬蟲程式
+        run: python scraper.py
+
+      - name: 強制更新數據到 GitHub
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
           git add data.json
-          git commit -m "Update data" || exit 0
-          git pull --rebase origin main  # 先把雲端變動抓下來合併
-          git push origin main
+          git commit -m "Auto update stock data" || exit 0
+          
+          # 解決截圖中的 rejected 錯誤：強制覆蓋並推送
+          git fetch origin main
+          git reset --soft origin/main
+          git push origin main --force
